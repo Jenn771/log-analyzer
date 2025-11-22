@@ -9,6 +9,9 @@ def parse_log_file(filename):
     for line in lines:
         parts = line.split()
 
+        if not parts:
+            continue
+
         log_entry = {
             'date': parts[0],
             'time': parts[1],
