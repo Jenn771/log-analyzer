@@ -43,7 +43,25 @@ def parse_log_file(filename):
     
     return parsed_logs
     
+def print_summary(logs):
+    print("SUMMARY")
+    print("-"*30)
 
+    total_entries = len(logs)
+    print(f"Total Entries:      {total_entries}")
+
+    # count log levels
+    level_counts = {}
+    for log in logs:
+        level = log['level']
+        level_counts[level] = level_counts.get(level, 0) + 1
+    
+    # print levels with percentages
+    for level, count in level_counts.items():
+        pct = (count / total_entries) * 100
+        print(f"{level:<20} {count} ({pct:.2f}%)")
+
+    print()
 
 def main():
     # Create argument parser
@@ -69,19 +87,8 @@ def main():
     else:
         print(f"Period: {logs[0]['date']} ({logs[0]['time']} - {lastlog['time']})\n")
 
-    # Log levels summary
-    print("SUMMARY")
-    print("-"*27)
-    print(f"Total Entries: {total_entries}")
 
-    all_levels = {}
-    for log in logs:
-        level = log['level']
-        all_levels[level] = all_levels.get(level, 0) + 1
-    
-    for level, count in all_levels.items():
-        print(f"{level:<15} {count} ({(count / total_entries) * 100:.2f}%)")
-
+    print_summary(logs)
 
 
 if __name__ == "__main__":
