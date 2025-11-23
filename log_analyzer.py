@@ -46,7 +46,7 @@ def parse_log_file(filename):
 def print_period(logs):
     total_entries = len(logs)
     lastlog = logs[total_entries - 1]
-    
+
     if logs[0]['date'] != lastlog['date']:
         print(f"Period: {logs[0]['date']} to {lastlog['date']} ({logs[0]['time']} - {lastlog['time']})\n")
     else:
@@ -72,6 +72,35 @@ def print_summary(logs):
 
     print()
 
+def print_response_times(logs):
+    times = []
+    for d in logs:
+        rt = d['response_time']
+        if rt is None:
+            continue
+        
+        num = int(rt.rstrip("ms"))
+        times.append(num)
+
+    if not times:
+        print("No response time data available.\n")
+        return
+
+    average_time = sum(times) / len(times)
+    fastest_time = min(times)
+    slowest_time = max(times)
+
+    print("RESPONSE TIMES")
+    print("-"*30)
+
+    print(f"{'Average:':<20}{average_time:.0f}ms")
+    print(f"{'Fastest:':<20}{fastest_time:.0f}ms")
+    print(f"{'Slowest:':<20}{slowest_time:.0f}ms\n")
+
+    
+
+
+
 def main():
     # Create argument parser
     parser = argparse.ArgumentParser(description="Analyze log files")
@@ -89,6 +118,7 @@ def main():
 
     print_period(logs)
     print_summary(logs)
+    print_response_times(logs)
 
 
 
