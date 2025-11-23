@@ -42,7 +42,16 @@ def parse_log_file(filename):
         parsed_logs.append(log_entry)
     
     return parsed_logs
+
+def print_period(logs):
+    total_entries = len(logs)
+    lastlog = logs[total_entries - 1]
     
+    if logs[0]['date'] != lastlog['date']:
+        print(f"Period: {logs[0]['date']} to {lastlog['date']} ({logs[0]['time']} - {lastlog['time']})\n")
+    else:
+        print(f"Period: {logs[0]['date']} ({logs[0]['time']} - {lastlog['time']})\n")
+
 def print_summary(logs):
     print("SUMMARY")
     print("-"*30)
@@ -71,24 +80,16 @@ def main():
     parser.add_argument('--export', help='Export results to JSON file')
 
     args = parser.parse_args()
-
+    
+    logs = parse_log_file(args.filename)
 
     print("----------------LOG ANALYSIS REPORT----------------\n")
     print(f"File: {args.filename}")
 
-    # Parse the log file
-    logs = parse_log_file(args.filename)
 
-    # Time period
-    total_entries = len(logs)
-    lastlog = logs[total_entries - 1]
-    if logs[0]['date'] != lastlog['date']:
-        print(f"Period: {logs[0]['date']} to {lastlog['date']} ({logs[0]['time']} - {lastlog['time']})\n")
-    else:
-        print(f"Period: {logs[0]['date']} ({logs[0]['time']} - {lastlog['time']})\n")
-
-
+    print_period(logs)
     print_summary(logs)
+
 
 
 if __name__ == "__main__":
