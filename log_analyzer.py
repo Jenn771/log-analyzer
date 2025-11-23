@@ -97,8 +97,28 @@ def print_response_times(logs):
     print(f"{'Fastest:':<20}{fastest_time:.0f}ms")
     print(f"{'Slowest:':<20}{slowest_time:.0f}ms\n")
 
-    
+def print_top_endpoints(logs):
+    endpoint_counts = {}
 
+    for d in logs:
+        endpoint = d['endpoint']
+
+        if endpoint is None:
+            continue
+
+        endpoint_counts[endpoint] = endpoint_counts.get(endpoint, 0) + 1
+
+    if not endpoint_counts:
+        print("No endpoint data available.\n")
+        return
+    
+    print("TOP ENDPOINTS")
+    print("-"*30)
+    for endpoint, count in endpoint_counts.items():
+        label = "request" if count == 1 else "requests"
+        print(f"{endpoint:<20} {count} {label}")
+    
+    print()
 
 
 def main():
@@ -119,6 +139,7 @@ def main():
     print_period(logs)
     print_summary(logs)
     print_response_times(logs)
+    print_top_endpoints(logs)
 
 
 
