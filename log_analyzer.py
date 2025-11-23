@@ -120,6 +120,17 @@ def print_top_endpoints(logs):
     
     print()
 
+def print_errors_detected(logs):
+    print("ERRORS DETECTED")
+    print("-"*30)
+
+    for d in logs:
+        level = d['level']
+
+        if level == "ERROR":
+            print(f"[{d['time']}] {d['method']} {d['endpoint']} - {d['message']}")
+
+    print()
 
 def main():
     # Create argument parser
@@ -140,6 +151,7 @@ def main():
     print_summary(logs)
     print_response_times(logs)
     print_top_endpoints(logs)
+    print_errors_detected(logs)
 
 
 
