@@ -56,10 +56,33 @@ def main():
 
 
     print("----------------LOG ANALYSIS REPORT----------------\n")
-    print(f"File: {args.filename}\n")
+    print(f"File: {args.filename}")
 
     # Parse the log file
     logs = parse_log_file(args.filename)
+
+    # Time period
+    total_entries = len(logs)
+    lastlog = logs[total_entries - 1]
+    if logs[0]['date'] != lastlog['date']:
+        print(f"Period: {logs[0]['date']} to {lastlog['date']} ({logs[0]['time']} - {lastlog['time']})\n")
+    else:
+        print(f"Period: {logs[0]['date']} ({logs[0]['time']} - {lastlog['time']})\n")
+
+    # Log levels summary
+    print("SUMMARY")
+    print("-"*27)
+    print(f"Total Entries: {total_entries}")
+
+    all_levels = {}
+    for log in logs:
+        level = log['level']
+        all_levels[level] = all_levels.get(level, 0) + 1
+    
+    for level, count in all_levels.items():
+        print(f"{level:<15} {count} ({(count / total_entries) * 100:.2f}%)")
+
+
 
 if __name__ == "__main__":
     main()
