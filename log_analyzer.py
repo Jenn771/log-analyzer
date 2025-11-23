@@ -57,7 +57,7 @@ def print_summary(logs):
     print("-"*30)
 
     total_entries = len(logs)
-    print(f"Total Entries:      {total_entries}")
+    print(f"{"Total Entries:":<20} {total_entries}")
 
     # count log levels
     level_counts = {}
@@ -131,6 +131,7 @@ def print_errors_detected(logs):
             print(f"[{d['time']}] {d['method']} {d['endpoint']} - {d['message']}")
 
     print()
+ 
 
 def main():
     # Create argument parser
@@ -142,6 +143,10 @@ def main():
     args = parser.parse_args()
     
     logs = parse_log_file(args.filename)
+
+    # Filter to show only errors
+    if args.errors:
+        logs = [log for log in logs if log['level'] == "ERROR"]
 
     print("----------------LOG ANALYSIS REPORT----------------\n")
     print(f"File: {args.filename}")
