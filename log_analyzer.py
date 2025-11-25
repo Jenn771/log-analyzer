@@ -211,6 +211,7 @@ def export_to_json(data, filename):
     try:
         with open(filename, "w") as f:
             json.dump(data, f, indent=2)
+            print(f"\nReport exported to: {filename}")
     except Exception as e:
         print(f"Error exporting to JSON: {e}")
 
