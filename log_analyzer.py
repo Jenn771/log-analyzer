@@ -148,7 +148,7 @@ def generate_report_data(logs, filename):
         "total_entries": total_entries,
         "time_range": {
             "start": f"{logs[0]['date']} {logs[0]['time']}" if logs else None,
-            "end": f"{logs[total_entries-1]['date']} {logs[total_entries-1]['time']}" if logs else None
+            "end": f"{logs[-1]['date']} {logs[-1]['time']}" if logs else None
         }
     }
 
