@@ -1,0 +1,15 @@
+2025-11-18 10:23:45 INFO User johndoe logged in from 192.168.1.100
+2025-11-18 10:24:12 INFO GET /api/users 200 45ms
+2025-11-18 10:24:15 ERROR POST /api/orders 500 1203ms - Database connection timeout
+2025-11-18 10:24:18 INFO GET /api/products 200 23ms
+2025-11-18 10:25:03 WARNING GET /api/products 404 12ms - Product not found
+2025-11-18 10:25:45 INFO User janedoe logged in from 192.168.1.101
+2025-11-18 10:26:12 ERROR POST /api/payment 500 2341ms - Payment gateway timeout
+2025-11-18 10:26:45 INFO GET /api/orders 200 67ms
+2025-11-18 10:27:03 INFO GET /api/users 200 34ms
+2025-11-18 10:27:30 ERROR GET /api/orders 500 156ms - Internal server error
+2025-11-18 10:28:15 INFO POST /api/users 201 89ms
+2025-11-18 10:28:45 WARNING GET /api/cart 429 5ms - Rate limit exceeded
+2025-11-18 10:29:12 INFO GET /api/products 200 28ms
+2025-11-18 10:29:45 ERROR POST /api/orders 500 987ms - Database connection timeout
+2025-11-18 10:30:23 INFO User bobsmith logged in from 192.168.1.102
