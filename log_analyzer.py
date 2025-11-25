@@ -228,6 +228,17 @@ def main():
     # Filter to show only errors
     if args.errors:
         logs = [log for log in logs if log['level'] == "ERROR"]
+        
+        print("----------------LOG ANALYSIS REPORT----------------\n")
+        print(f"File: {args.filename}\n")
+
+        if not logs:
+            print("No errors found.\n")
+        else:
+            print_errors_detected(logs)
+
+        return
+
 
     print("----------------LOG ANALYSIS REPORT----------------\n")
     print(f"File: {args.filename}")
