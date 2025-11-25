@@ -1,4 +1,6 @@
 import argparse
+import json
+from datetime import datetime
 
 def parse_log_file(filename):
     parsed_logs = []
@@ -44,6 +46,10 @@ def parse_log_file(filename):
     return parsed_logs
 
 def print_period(logs):
+    if not logs:
+        print("Period: No log entries found\n")
+        return
+
     total_entries = len(logs)
     lastlog = logs[total_entries - 1]
 
@@ -57,7 +63,7 @@ def print_summary(logs):
     print("-"*30)
 
     total_entries = len(logs)
-    print(f"{"Total Entries:":<20} {total_entries}")
+    print(f"{'Total Entries:':<20} {total_entries}")
 
     # count log levels
     level_counts = {}
@@ -132,6 +138,81 @@ def print_errors_detected(logs):
 
     print()
  
+def generate_report_data(logs, filename):
+    total_entries = len(logs)
+    
+    # Metadata
+    metadata = {
+        "filename": filename,
+        "analyzed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_entries": total_entries,
+        "time_range": {
+            "start": f"{logs[0]['date']} {logs[0]['time']}" if logs else None,
+            "end": f"{logs[total_entries-1]['date']} {logs[total_entries-1]['time']}" if logs else None
+        }
+    }
+
+    # Log levels summary
+    level_counts = {}
+    for log in logs:
+        level = log['level']
+        level_counts[level] = level_counts.get(level, 0) + 1
+
+    summary = {
+        "total_entries": total_entries,
+        "log_levels": level_counts
+    }
+
+    # Response times
+    times = []
+    for d in logs:
+        rt = d['response_time']
+        if rt is None:
+            continue
+        
+        num = int(rt.rstrip("ms"))
+        times.append(num)
+
+    response_times = {}
+    if times:
+        response_times = {
+            "average_ms": round(sum(times) / len(times)),
+            "min_ms": min(times),
+            "max_ms": max(times)
+        }
+
+    # Errors list
+    errors = []
+
+    for d in logs:
+        if d['level'] == "ERROR":
+            error_entry = {
+                "timestamp": f"{d['date']} {d['time']}",
+                "level": d['level'],
+                "endpoint": d['endpoint'],
+                "method": d['method'],
+                "status_code": int(d['status']) if d['status'] else None,
+                "response_time": int(d['response_time'].rstrip('ms')) if d['response_time'] else None,
+                "message": d['message']
+            }
+            errors.append(error_entry)
+
+    # Build final report
+    report = {
+        "metadata": metadata,
+        "summary": summary,
+        "response_times": response_times,
+        "errors": errors
+    }
+
+    return report
+
+def export_to_json(data, filename):
+    try:
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Error exporting to JSON: {e}")
 
 def main():
     # Create argument parser
@@ -158,6 +239,9 @@ def main():
     print_top_endpoints(logs)
     print_errors_detected(logs)
 
+    if args.export:
+        report_data = generate_report_data(logs, args.filename)
+        export_to_json(report_data, args.export)
 
 
 if __name__ == "__main__":
